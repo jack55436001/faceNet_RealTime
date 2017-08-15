@@ -9,3 +9,5 @@ main feature
 1.RealTime face recognition
 
 2.add Consine simularity compare
+
+3.change 'mypath' to your image folder

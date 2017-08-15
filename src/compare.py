@@ -34,7 +34,7 @@ import os
 import argparse
 import facenet
 import align.detect_face
-
+import facial_landmarks as fl
 
 def main(args,imageDir):
 
@@ -106,7 +106,7 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
     nrof_samples = len(image_paths)
     img_list = [None] * nrof_samples
     for i in range(nrof_samples):
-        img = misc.imread(os.path.expanduser(image_paths[i]))
+        img = misc.imread(os.path.expanduser(image_paths[i]))   
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes, _ = align.detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
         det = np.squeeze(bounding_boxes[0,0:4])
@@ -117,9 +117,10 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
         bb[3] = np.minimum(det[3]+margin/2, img_size[0])
         cropped = img[bb[1]:bb[3],bb[0]:bb[2],:]
         aligned = misc.imresize(cropped, (image_size, image_size), interp='bilinear')
+        #aligned = fl.faceLandMarks(aligned)
         prewhitened = facenet.prewhiten(aligned)
         img_list[i] = prewhitened
-        #misc.imsave(str(i)+'.jpg',img_list[i])
+        misc.imsave(str(i)+'.jpg',img_list[i])
     images = np.stack(img_list)
 
     return images
@@ -133,7 +134,7 @@ def parse_arguments(argv):
     parser.add_argument('--image_size', type=int,
         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--margin', type=int,
-        help='Margin for the crop around the bounding box (height, width) in pixels.', default=44)
+        help='Margin for the crop around the bounding box (height, width) in pixels.', default=44)  
     parser.add_argument('--gpu_memory_fraction', type=float,
         help='Upper bound on the amount of GPU memory that will be used by the process.', default=1.0)
     return parser.parse_args(argv)

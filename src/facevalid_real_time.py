@@ -28,9 +28,9 @@ def main(args):
 	# When everything done, release the capture
 	cap.release()
 	cv2.destroyAllWindows()
-	cv2.imwrite('saveFace.jpg',frame)
+	cv2.imwrite('C:/Users/USER/Desktop/facenet-RealTime/src/face_data/saveFace.jpg',frame)
 	
-	mypath = 'C:/Users/USER/Desktop/facenet-master/src'
+	mypath = 'C:/Users/USER/Desktop/facenet-RealTime/src/face_data'
 	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 	myImage = []
 	for file in onlyfiles:
@@ -48,11 +48,11 @@ def parse_arguments(argv):
     
     parser.add_argument('model', type=str, 
         help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file')
-    #parser.add_argument('image_files', type=str, nargs='+', help='Images to compare')
+    #parser.add_argument('image_path', type=str, nargs='+', help='Images path to compare')
     parser.add_argument('--image_size', type=int,
         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--margin', type=int,
-        help='Margin for the crop around the bounding box (height, width) in pixels.', default=44)
+        help='Margin for the crop around the bounding box (height, width) in pixels.', default=-50) #44 default #-50 best test
     parser.add_argument('--gpu_memory_fraction', type=float,
         help='Upper bound on the amount of GPU memory that will be used by the process.', default=1.0)
     return parser.parse_args(argv)
